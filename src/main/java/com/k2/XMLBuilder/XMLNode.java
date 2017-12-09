@@ -6,90 +6,78 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * An abstract class defining nodes within an xml document.
+ * @author simon
+ *
+ */
 public abstract class XMLNode {
 	
 	XMLBuilder xb;
 	XMLNode parent;
 	List<XMLNode> contents;
-	XMLNamespace namespace;
-	Set<XMLNamespace> namespaces;
 
-
-	public XMLNode(XMLBuilder xb) {
+	/**
+	 * Create an xml node for the given xml builder
+	 * @param xb The xml builder that created the xml node
+	 */
+	XMLNode(XMLBuilder xb) {
 		this.xb = xb;
 	}
-	
-	public XMLNode(XMLBuilder xb, XMLNode parent) {
-		this.xb = xb;
-		this.parent = parent;
-	}
-	
-	public XMLNode(XMLBuilder xb, XMLNamespace namespace) {
-		this.xb = xb;
-		this.namespace = namespace;
-	}
-	
-	public XMLNode(XMLBuilder xb, XMLNode parent, XMLNamespace namespace) {
-		this.xb = xb;
-		this.parent = parent;
-		this.namespace = namespace;
-	}
-	
+	/**
+	 * Set the parent of this node
+	 * @param parent The xml node that is a parent of this node
+	 * @return This node for method chaining
+	 */
 	XMLNode setParent(XMLNode parent) {
 		this.parent = parent;
 		return this;
 	}
-	
+	/**
+	 * Get the parent node of this node
+	 * @return The parent node of this node
+	 */
 	XMLNode getParent() {
 		return parent;
 	}
-	
+	/**
+	 * A utility method to move up the document path once the node has been fully defined.
+	 * @return The parent node of this node as an XMLElement
+	 */
 	public XMLElement up() {
 		return (XMLElement)parent;
 	}
-	
+	/**
+	 * A utility method to return to the docuement root once the node has been fully defined
+	 * @return The root of the xml document
+	 */
 	public XMLDocument root() { return xb.root(); }
-	
-	XMLNode set(XMLNamespace namespace) {
-		this.namespace = namespace;
-		return this;
-	}
-	
+	/**
+	 * Add a node as a child of this node setting this node as the added noded parent
+	 * @param node The node to add
+	 * @return This node for method chaining
+	 */
 	public XMLNode add(XMLNode node) {
 		if (contents == null) { contents = new ArrayList<XMLNode>(); }
 		contents.add(node);
 		node.setParent(this);
 		return this;
 	}
-
-	public XMLNode add(XMLNamespace namespace) {
-		if (namespaces == null) { namespaces = new HashSet<XMLNamespace>(); }
-		namespaces.add(namespace);
-		return this;
-	}
-	
+	/**
+	 * Remove a node from the child nodes of this node
+	 * @param node The node to remove
+	 * @return This node for method chaining
+	 */
 	public XMLNode remove(XMLNode node) {
 		if (contents == null) { return this; }
 		contents.remove(node);
 		return this;
 	}
-	
-	public XMLNode remove(XMLNamespace namespace) {
-		if (namespaces == null) { return this; }
-		namespaces.remove(namespace);
-		return this;
-	}
-	
-	public XMLNamespace getNamespace() { return namespace; }	
-	
-	public boolean defined(XMLNamespace namespace) {
-		if (namespace == null) return true;
-		if (namespace.equals(getNamespace())) return true;
-		if (namespaces!=null && namespaces.contains(namespace)) return true;
-		if (parent!=null) return parent.defined(namespace);
-		return false;
-	}
-	
+	/**
+	 * This abstract method is a place holder for implementation of the method to output the node in an xml document.
+	 * @param pw The print writer used to write the xml document
+	 * @return The print writer used to write the xml document for method chaining
+	 */
 	public abstract PrintWriter toXml(PrintWriter pw);
 
 
