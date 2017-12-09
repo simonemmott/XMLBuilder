@@ -370,8 +370,6 @@ public class XMLElement extends XMLNode {
 		return false;
 	}
 	
-
-	
 	/**
 	 * Output this element as string without carriage returns or namespaces but including xml encoding.
 	 */
