@@ -15,11 +15,12 @@ public class XMLBuilderTest
     public void basicTest()
     {
     	
-    		String expectedResult = 	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-    								"<root>\n" + 
-    								"	<elm attr=\"value\">AAAA</elm>\n" + 
-    								"	<elm attr=\"value2\">BBBB</elm>\n" + 
-    								"</root>\n";
+    		String expectedResult = 	
+    				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+    				"<root>\n" + 
+    				"	<elm attr=\"value\">AAAA</elm>\n" + 
+    				"	<elm attr=\"value2\">BBBB</elm>\n" + 
+    				"</root>\n";
     	
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
@@ -45,12 +46,13 @@ public class XMLBuilderTest
     public void indentAndPrologTest()
     {
     	
-    		String expectedResult = 	"<root>\n" + 
-    								"  <elm attr=\"value\">\n" +
-    								"    AAAA\n" + 
-    								"    <elm attr=\"value2\">BBBB</elm>\n" + 
-    								"  </elm>\n" +
-    								"</root>\n";
+    		String expectedResult = 	
+    				"<root>\n" + 
+				"  <elm attr=\"value\">\n" +
+				"    AAAA\n" + 
+				"    <elm attr=\"value2\">BBBB</elm>\n" + 
+				"  </elm>\n" +
+				"</root>\n";
     	
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
@@ -76,11 +78,12 @@ public class XMLBuilderTest
     public void versionAndCharacterEncodingTest()
     {
     	
-    		String expectedResult = 	"<?xml version=\"0.9\" encoding=\"ISO 8859-1\"?>\n" + 
-    								"<root>\n" + 
-    								"	<elm attr=\"value\">AAAA</elm>\n" + 
-    								"	<elm attr=\"value2\">BBBB</elm>\n" + 
-    								"</root>\n";
+    		String expectedResult = 	
+    				"<?xml version=\"0.9\" encoding=\"ISO 8859-1\"?>\n" + 
+				"<root>\n" + 
+				"	<elm attr=\"value\">AAAA</elm>\n" + 
+				"	<elm attr=\"value2\">BBBB</elm>\n" + 
+				"</root>\n";
     	
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
@@ -108,14 +111,15 @@ public class XMLBuilderTest
     public void attributesAndEncodingTest()
     {
     	
-    		String expectedResult = 	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-    								"<root root-attr=\"root-value\">\n" + 
-    								"	<elm duplicated=\"true\" attr=\"value\" encoded=\": &lt; &gt; &apos; &quot; &amp; :\">AAAA</elm>\n" + 
-    								"	<elm>\n" + 
-    								"		Encoded: &lt; &gt; &apos; &quot; &amp; :\n" + 
-    								"		Unencoded: < > ' \" & :\n" + 
-    								"	</elm>\n" + 
-    								"</root>\n";
+    		String expectedResult = 	
+    				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<root root-attr=\"root-value\">\n" + 
+				"	<elm duplicated=\"true\" attr=\"value\" encoded=\": &lt; &gt; &apos; &quot; &amp; :\">AAAA</elm>\n" + 
+				"	<elm>\n" + 
+				"		Encoded: &lt; &gt; &apos; &quot; &amp; :\n" + 
+				"		Unencoded: < > ' \" & :\n" + 
+				"	</elm>\n" + 
+				"</root>\n";
     	
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
@@ -145,26 +149,27 @@ public class XMLBuilderTest
     public void cDataTest()
     {
     	
-    		String expectedResult = 	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-    								"<root>\n" + 
-    								"	<elm>\n" + 
-    								"		<![CDATA[\n" + 
-    								"AAAA\n" + 
-    								"		]]>\n" + 
-    								"	</elm>\n" + 
-    								"	<elm>\n" + 
-    								"		<![CDATA[\n" + 
-    								"!@#$%^&*()_+\n" + 
-    								"QWERTYUIOP{}\n" + 
-    								"ASDFGHJKL:\"|\n" + 
-    								"~ZXCVBNM<>?\n" + 
-    								"1234567890-=\n" + 
-    								"qwertyuiop[]\n" + 
-    								"asdfghjkl;'\\\n" + 
-    								"`zxcvbnm,./\n" + 
-    								"		]]>\n" + 
-    								"	</elm>\n" + 
-    								"</root>\n";
+    		String expectedResult = 	
+    				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<root>\n" + 
+				"	<elm>\n" + 
+				"		<![CDATA[\n" + 
+				"AAAA\n" + 
+				"		]]>\n" + 
+				"	</elm>\n" + 
+				"	<elm>\n" + 
+				"		<![CDATA[\n" + 
+				"!@#$%^&*()_+\n" + 
+				"QWERTYUIOP{}\n" + 
+				"ASDFGHJKL:\"|\n" + 
+				"~ZXCVBNM<>?\n" + 
+				"1234567890-=\n" + 
+				"qwertyuiop[]\n" + 
+				"asdfghjkl;'\\\n" + 
+				"`zxcvbnm,./\n" + 
+				"		]]>\n" + 
+				"	</elm>\n" + 
+				"</root>\n";
     	
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
@@ -200,15 +205,16 @@ public class XMLBuilderTest
     public void namespacesTest()
     {
     	
-    		String expectedResult = 	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-    								"<root xmlns:a=\"http://a.com\" xmlns:b=\"http://b.com\">\n" + 
-    								"	<a:elm>AAAA</a:elm>\n" + 
-    								"	<b:elm>BBBB</b:elm>\n" + 
-    								"	<c:elm xmlns:c=\"http://c.com\">\n" + 
-    								"		CCCC\n" + 
-    								"		<c:child-elm>cccc</c:child-elm>\n" + 
-    								"	</c:elm>\n" + 
-    								"</root>\n";
+    		String expectedResult = 	
+    				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<root xmlns:a=\"http://a.com\" xmlns:b=\"http://b.com\">\n" + 
+				"	<a:elm>AAAA</a:elm>\n" + 
+				"	<b:elm>BBBB</b:elm>\n" + 
+				"	<c:elm xmlns:c=\"http://c.com\">\n" + 
+				"		CCCC\n" + 
+				"		<c:child-elm>cccc</c:child-elm>\n" + 
+				"	</c:elm>\n" + 
+				"</root>\n";
     	
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
