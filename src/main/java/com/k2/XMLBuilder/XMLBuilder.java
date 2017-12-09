@@ -58,8 +58,8 @@ public class XMLBuilder {
 	public XMLDocument document(String root, XMLNamespace namespace) { return new XMLDocument(this, root, namespace); }
 	public XMLDocument document(String version, String encoding, String root, XMLNamespace namespace) { return new XMLDocument(this, version, encoding, root, namespace); }
 	
-	public XMLTag tag(String tag) { return new XMLTag(this, tag); }
-	public XMLTag tag(String tag, XMLNamespace namespace) { return new XMLTag(this, tag, namespace); }
+	public XMLElement element(String tag) { return new XMLElement(this, tag); }
+	public XMLElement element(String tag, XMLNamespace namespace) { return new XMLElement(this, tag, namespace); }
 	
 	public XMLData data(String data) { return new XMLData(this, data); }
 	public XMLData data(String data, boolean encode) { return new XMLData(this, data, encode); }

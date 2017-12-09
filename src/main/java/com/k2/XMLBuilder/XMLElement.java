@@ -8,54 +8,54 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class XMLTag extends XMLNode {
+public class XMLElement extends XMLNode {
 	
 	String tag;
 	Map<String, String> attributes = new HashMap<String, String>();
 	
-	public XMLTag(XMLBuilder xb, String tag) {
+	public XMLElement(XMLBuilder xb, String tag) {
 		super(xb);
 		this.tag = tag;
 	}
 	
-	public XMLTag(XMLBuilder xb, String tag, XMLNamespace namespace) {
+	public XMLElement(XMLBuilder xb, String tag, XMLNamespace namespace) {
 		super(xb, namespace);
 		this.tag = tag;
 	}
 	
-	public XMLTag set(String attr, String value) {
+	public XMLElement set(String attr, String value) {
 		attributes.put(attr, value);
 		return this;
 	}
 	
-	public XMLTag remove(String attr) {
+	public XMLElement remove(String attr) {
 		attributes.remove(attr);
 		return this;
 	}
 	
 	@Override
-	public XMLTag add(XMLNode node) {		
-		return (XMLTag)super.add(node);
+	public XMLElement add(XMLNode node) {		
+		return (XMLElement)super.add(node);
 	}
 	
 	@Override
-	public XMLTag remove(XMLNode node) {
-		return (XMLTag)super.remove(node);
+	public XMLElement remove(XMLNode node) {
+		return (XMLElement)super.remove(node);
 	}
 	
 	@Override
-	public XMLTag set(XMLNamespace namespace) {		
-		return (XMLTag)super.set(namespace);
+	public XMLElement set(XMLNamespace namespace) {		
+		return (XMLElement)super.set(namespace);
 	}
 	
 	@Override
-	public XMLTag add(XMLNamespace namespace) {		
-		return (XMLTag)super.add(namespace);
+	public XMLElement add(XMLNamespace namespace) {		
+		return (XMLElement)super.add(namespace);
 	}
 	
 	@Override
-	public XMLTag remove(XMLNamespace namespace) {
-		return (XMLTag)super.remove(namespace);
+	public XMLElement remove(XMLNamespace namespace) {
+		return (XMLElement)super.remove(namespace);
 	}
 	
 

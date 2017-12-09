@@ -2,7 +2,7 @@ package com.k2.XMLBuilder;
 
 import java.io.PrintWriter;
 
-public class XMLDocument extends XMLTag {
+public class XMLDocument extends XMLElement {
 
 	String version = "1.0";
 	String encoding = "UTF-8";
