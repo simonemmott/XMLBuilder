@@ -10,6 +10,7 @@ public class XMLBuilder {
 	private String indentStr = "\t";
 	private String currentIndentStr = "";
 	private boolean includeProlog = true;
+	private XMLDocument builderRoot;
 	
 	public XMLBuilder() {}
 	
@@ -54,9 +55,11 @@ public class XMLBuilder {
 		return definedNamespaces.contains(namespace);
 	} 
 	
-	public XMLDocument document(String root) { return new XMLDocument(this, root); }
-	public XMLDocument document(String root, XMLNamespace namespace) { return new XMLDocument(this, root, namespace); }
-	public XMLDocument document(String version, String encoding, String root, XMLNamespace namespace) { return new XMLDocument(this, version, encoding, root, namespace); }
+	public XMLDocument document(String root) { builderRoot = new XMLDocument(this, root); return builderRoot; }
+	public XMLDocument document(String root, XMLNamespace namespace) { builderRoot = new XMLDocument(this, root, namespace);  return builderRoot; }
+	public XMLDocument document(String version, String encoding, String root, XMLNamespace namespace) { builderRoot = new XMLDocument(this, version, encoding, root, namespace);  return builderRoot; }
+	
+	public XMLDocument root() { return builderRoot; }
 	
 	public XMLElement element(String tag) { return new XMLElement(this, tag); }
 	public XMLElement element(String tag, XMLNamespace namespace) { return new XMLElement(this, tag, namespace); }

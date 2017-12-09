@@ -27,11 +27,51 @@ public class XMLElement extends XMLNode {
 		attributes.put(attr, value);
 		return this;
 	}
+	public XMLElement attribute(String attr, String value) { return set(attr, value); }
+	public XMLElement attr(String attr, String value) { return set(attr, value); }
+	public XMLElement a(String attr, String value) { return set(attr, value); }
 	
 	public XMLElement remove(String attr) {
 		attributes.remove(attr);
 		return this;
 	}
+	
+	public XMLElement element(String tag) {
+		XMLElement el = xb.element(tag);
+		super.add(el);
+		return el;
+	}
+	public XMLElement elem(String tag) { return element(tag); }
+	public XMLElement el(String tag) { return element(tag); }
+	public XMLElement e(String tag) { return element(tag); }
+	
+	public XMLElement element(String tag, XMLNamespace ns) {
+		XMLElement el = xb.element(tag, ns);
+		super.add(el);
+		return el;
+	}
+	public XMLElement elem(String tag, XMLNamespace ns) { return element(tag, ns); }
+	public XMLElement el(String tag, XMLNamespace ns) { return element(tag, ns); }
+	public XMLElement e(String tag, XMLNamespace ns) { return element(tag, ns); }
+	
+	public XMLElement data(String data) {
+		return (XMLElement)super.add(xb.data(data));
+	}
+	public XMLElement data(String data, boolean encoded) {
+		return (XMLElement)super.add(xb.data(data, encoded));
+	}
+	public XMLElement d(String data) { return data(data); }
+	public XMLElement d(String data, boolean encoded) { return data(data, encoded); }
+	
+	public XMLElement cData(String cData) {
+		return (XMLElement)super.add(xb.cData(cData));
+	}
+	public XMLElement c(String cData) { return cData(cData); }
+	
+	public XMLElement cData(StringBuilder cData) {
+		return (XMLElement)super.add(xb.cData(cData));
+	}
+	public XMLElement c(StringBuilder cData) { return cData(cData); }
 	
 	@Override
 	public XMLElement add(XMLNode node) {		

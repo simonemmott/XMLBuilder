@@ -40,6 +40,16 @@ public abstract class XMLNode {
 		return this;
 	}
 	
+	XMLNode getParent() {
+		return parent;
+	}
+	
+	public XMLElement up() {
+		return (XMLElement)parent;
+	}
+	
+	public XMLDocument root() { return xb.root(); }
+	
 	XMLNode set(XMLNamespace namespace) {
 		this.namespace = namespace;
 		return this;

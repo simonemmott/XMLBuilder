@@ -21,6 +21,7 @@ public class XMLBuilderAPITest
     		xb.document("root", nsA)
     		.add(nsA)
     		.add(nsB)
+    		.set("root-attr", "root-value")
     		.add(
     			xb.element("tag1", nsA)
     			.set("attr1.1", "attr1.1-value")
@@ -49,8 +50,40 @@ public class XMLBuilderAPITest
     	    			.add(xb.data("This should define the name space d"))
     			)
     		)
-    		.set("root-attr", "root-value")
     		.toXml(new PrintWriter(System.out)).flush();
+    		
+    		
+    		xb = new XMLBuilder().setIndent("  ").includeProlog(false);
+    		xb.document("root")
+    		.attr("root-attr", "root-value")
+    		.elem("tag1")
+			.attr("attr1.1", "attr1.1-value")
+			.attr("attr1.2", "attr1.2-value")
+			.elem("tag1-data")
+				.data("This is some data")
+				.up()
+			.elem("empty")
+				.attr("attr", "value")
+				.up()
+			.up()
+		.elem("tag2")
+			.attr("attr2.1", "attr2.1-value")
+			.attr("attr2.2", "attr2.2-value<>'\"&")
+			.elem("encoded")
+				.data("This is encoded: < > ' \" &")
+				.up()
+			.elem("unencoded")
+				.data("This is not encoded: < > ' \" &", false)
+				.up()
+			.elem("cdata")
+				.cData("THIS IS CDATA !@#$%^&*()")
+				.up()
+			.elem("encoded")
+				.data("This should define the name space d")
+				.root()
+		.toXml(new PrintWriter(System.out)).flush();
+				
+    			
     		
     }
 }
