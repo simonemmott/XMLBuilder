@@ -88,10 +88,10 @@ public class XMLBuilderTest
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
     		
-    		XMLBuilder xb = new XMLBuilder();
-    		xb.document("root")
-    		.setVersion("0.9")
-    		.setEncoding("ISO 8859-1")
+		XMLBuilder xb = new XMLBuilder();
+		xb.document("root")
+		.setVersion("0.9")
+		.setEncoding("ISO 8859-1")
     		.elem("elm")
     			.attr("attr", "value")
     			.data("AAAA")
