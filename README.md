@@ -57,6 +57,20 @@ Maven users can add this project using the following additions to the pom.xml fi
 The following are examples of using XMLBuilder to generate various xml documents. Full working examples can be found
 in `/src/example/java/`.
 
+### Creating An Xml Document
+
+These example shows how to create xml documents using XMLBuilder
+
+#### Really Simple Example
+
+The following code produces a default xml document.
+```java
+// Create the XMLBuilder instance
+XMLBuilder xb = new XMLBuilder();
+
+// Extract the document from the builder instance
+XMLDocument doc = xb.document("root");
+```
 
 
 
