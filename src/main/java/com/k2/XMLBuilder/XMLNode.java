@@ -1,6 +1,9 @@
 package com.k2.XMLBuilder;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -80,6 +83,25 @@ public abstract class XMLNode {
 	 */
 	public abstract PrintWriter toXml(PrintWriter pw);
 
+	/**
+	 * This method is a convenience method to allow any writer to be used to generate the xml document
+	 * @param w	The writer to output the document
+	 * @return	The writer that was passed in for mthod chaining.
+	 */
+	public Writer toXml(Writer w) {
+		toXml(new PrintWriter(w));
+		return w;
+	}
 
+	/**
+	 * This method is a convenience method to simplify the generation of xml files.
+	 * @param f	The file to write the xml to
+	 * @return The file that was passed in
+	 * @throws FileNotFoundException
+	 */
+	public File toXml(File f) throws FileNotFoundException {
+		toXml(new PrintWriter(f)).flush();
+		return f;
+	}
 
 }

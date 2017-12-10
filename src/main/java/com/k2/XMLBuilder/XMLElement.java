@@ -1,6 +1,7 @@
 package com.k2.XMLBuilder;
 
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -247,7 +248,7 @@ public class XMLElement extends XMLNode {
 //	public XMLElement remove(XMLNamespace namespace) {
 //		return (XMLElement)super.remove(namespace);
 //	}
-
+	
 	/**
 	 * Output this element as well formed xml including and defining namespaces as necessary
 	 */
