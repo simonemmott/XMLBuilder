@@ -100,6 +100,67 @@ Which produces the following xml
 <root/>
 ```
 
+#### Formatting The Indent
+By default XMLBuilder uses a tab `'\t'` character as the indent. This can be overridden as follows:
+```java
+XMLBuilder xb = new XMLBuilder().setIndent("  ");
+```
+Which uses two space characters `'  '` as the indent.
+
+### Adding Contents To An Xml Document
+
+Xml documents are a hierarchy of nodes. Documents produced by XMLBuilder mirror this structure and provide simple
+methods to add and remove nodes from the hierarchy. Nodes that define the structure of the document are elements
+while nodes that define the data within that structure are data or cData nodes.
+
+Elements have attributes and may contain other nodes while data and cData nodes do not.  The document root is
+a special element with methods to control the xml prolog as above. Element nodes produced by XMLBuilder have methods 
+to set attributes and add child elements.
+
+#### Setting Attributes On The Document Root
+The following example shows how to set attributes on the document root:
+```java
+XMLBuilder xb = new XMLBuilder();
+xb.document("root")
+.attribute("root-attr", "root-value");
+```
+Which produces the following xml:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root root-attr="root-value"/>
+```
+
+#### Setting Atributes On Elements
+The following example shows adding multiple attributes to a single element:
+```java
+XMLBuilder xb = new XMLBuilder();
+xb.document("root")
+.element("child-elm")
+	.attribute("attr1", "Added by attribute(...)")
+	.attr("attr2", "Added by attr(...)")
+	.a("attr3", "Added by a(...)")
+	.up()
+.element("child-elm")
+	.attr("duplicate", "false")
+	.attr("duplicate", "true");
+	.up()
+```
+Which produces the follwing xml:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<child-elm attr2="Added by attr(...)" attr1="Added by attribute(...)" attr3="Added by a(...)"/>
+	<child-elm duplicate="true"/>
+</root>
+```
+**Note** For brevity there are multiple names for the attribute(...) method
+
+**Note** If multiple attibutes with the same name are added the last one takes precedence.
+
+
+
+
+
 
 
 
