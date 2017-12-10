@@ -16,11 +16,11 @@ public class XMLBuilderTest
     {
     	
     		String expectedResult = 	
-    				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-    				"<root>\n" + 
-    				"	<elm attr=\"value\">AAAA</elm>\n" + 
-    				"	<elm attr=\"value2\">BBBB</elm>\n" + 
-    				"</root>\n";
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<root>\n" + 
+				"	<elm attr=\"value\">AAAA</elm>\n" + 
+				"	<elm attr=\"value2\">BBBB</elm>\n" + 
+				"</root>\n";
     	
     		StringWriter sw = new StringWriter();
     		PrintWriter pw = new PrintWriter(sw);
