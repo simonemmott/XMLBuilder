@@ -286,7 +286,7 @@ doc.elem("elm")
 	.cData("AAAA")
 	.up()
 .elem("elm")
-	.cData(sb)
+	.c(sb)
 	.up();
 
 sb.append("1234567890-=\n")
@@ -318,6 +318,8 @@ asdfghjkl;'\
 </root>
 ```
 **Note** cData nodes can be created from a string or a string builder
+
+**Note** for brevity here are multiple named for the `cData(...)` method.
 
 **Note** the contents of the cData node created from a string builder can be built at any time up to the generation of the xml
 
@@ -361,9 +363,121 @@ xb.document("root")
 
 ### Working With Deep Trees
 
+To simplify working with deep trees XMLBuilder includes a `root()` method. This method is available on all elements in the
+document and returns the focus to the document root.
 
+This code:
+```java
+XMLBuilder xb = new XMLBuilder();
+xb.document("root")
+.elem("This")
+	.elem("is")
+		.elem("a")
+			.elem("really")
+				.elem("really")
+					.elem("deep")
+						.elem("tree")
+						.root()
+.elem("This")
+	.elem("is")
+		.elem("another")
+			.elem("really")
+				.elem("really")
+					.elem("deep")
+						.elem("tree")
+						.root();
+```
+Produces this xml:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<This>
+		<is>
+			<a>
+				<really>
+					<really>
+						<deep>
+							<tree/>
+						</deep>
+					</really>
+				</really>
+			</a>
+		</is>
+	</This>
+	<This>
+		<is>
+			<another>
+				<really>
+					<really>
+						<deep>
+							<tree/>
+						</deep>
+					</really>
+				</really>
+			</another>
+		</is>
+	</This>
+</root>
+```
 
+### Working With Namespaces
 
+Xml namespaces allow elements with the same tag to be included in a single document.
+
+Namespaces can be used with elements in two ways.
+
+1. Assigned to the element
+1. Added to the element
+
+If a namespace is assigned to an element then that element is considered to be in the assigned namespace. Such elements
+will have their tag prefixed with the namespace prefix. If an element is assigned to a namespace by the namespace is
+not defined on the elements document path then the definition of the namespace is automatically added to the element 
+as an attribute thus defining it in the document path.
+
+If a namespace is added to an element then the element is not considered to be in the namespace. Such elements will 
+not have their tag prefixed with namespace's prefix. They will however automatically include all the namespaces that 
+have been added as attributes of the element unless they have already been defined in the document path.
+
+e.g. This code:
+```java
+XMLNamespace nsA = new XMLNamespace("a", "http://a.com");
+XMLNamespace nsB = new XMLNamespace("b", "http://b.com");
+XMLNamespace nsC = new XMLNamespace("c", "http://c.com");
+
+XMLBuilder xb = new XMLBuilder();
+xb.document("root")
+// Add namespaces to the document root
+.add(nsA)
+.add(nsB)
+// Assign namespace to an element
+.elem("elm", nsA)
+	.data("AAAA")
+	.up()
+// Assign namespace to an element
+.elem("elm", nsB)
+	.data("BBBB")
+	.up()
+// Assign namespace to an element
+.elem("elm", nsC)
+	.data("CCCC")
+	// Assign namespace to an element
+	.elem("child-elm", nsC)
+		.data("cccc")
+		.up()
+	.up()
+```
+Produces this xml:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:a="http://a.com" xmlns:b="http://b.com">
+	<a:elm>AAAA</a:elm>
+	<b:elm>BBBB</b:elm>
+	<c:elm xmlns:c="http://c.com">
+		CCCC
+		<c:child-elm>cccc</c:child-elm>
+	</c:elm>
+</root>
+```
 
 
 
