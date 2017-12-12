@@ -16,8 +16,8 @@ import java.util.Set;
  */
 public abstract class XMLNode {
 	
-	XMLBuilder xb;
-	XMLNode parent;
+	protected XMLBuilder xb;
+	protected XMLNode parent;
 	List<XMLNode> contents;
 
 	/**

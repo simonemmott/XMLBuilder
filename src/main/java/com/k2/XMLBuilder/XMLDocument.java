@@ -24,7 +24,7 @@ public class XMLDocument extends XMLElement {
 	 * @param xb The xml builder that created the instance
 	 * @param root The tag of the root document element
 	 */
-	XMLDocument(XMLBuilder xb, String root) {
+	protected XMLDocument(XMLBuilder xb, String root) {
 		super(xb, root);
 	}
 	/**
@@ -33,7 +33,7 @@ public class XMLDocument extends XMLElement {
 	 * @param root The tag of the root element
 	 * @param namespace The namespace of the root element
 	 */
-	XMLDocument(XMLBuilder xb, String root, XMLNamespace namespace) {
+	protected XMLDocument(XMLBuilder xb, String root, XMLNamespace namespace) {
 		super(xb, root, namespace);
 	}
 	/**
@@ -45,7 +45,7 @@ public class XMLDocument extends XMLElement {
 	 * @param root The tag of the root element
 	 * @param namespace The namespace of the root element
 	 */
-	XMLDocument(XMLBuilder xb, String version, String encoding, String root, XMLNamespace namespace) {
+	protected XMLDocument(XMLBuilder xb, String version, String encoding, String root, XMLNamespace namespace) {
 		super(xb, root, namespace);
 		this.version = version;
 		this.encoding = encoding;
@@ -112,13 +112,20 @@ public class XMLDocument extends XMLElement {
 	public XMLDocument remove(XMLNamespace namespace) {
 		return (XMLDocument)super.remove(namespace);
 	}
+	
+	/**
+	 * The method returns the prolog as a string. It is used to add the prolog to the document and should be overriden if an
+	 * Alternative prolog is required e.g. \<!DOCTYPE html\> for an html document
+	 * @return	The prolog string
+	 */
+	protected String prolog() { return "<?xml version=\""+version+"\" encoding=\""+encoding+"\"?>"; }
 
 	/**
 	 * Output this document on the given print writer including the xml prolog if the xml builder is so configured
 	 */
 	@Override
 	public PrintWriter toXml(PrintWriter pw) {
-		if (xb.includeProlog()) pw.println("<?xml version=\""+version+"\" encoding=\""+encoding+"\"?>");
+		if (xb.includeProlog()) pw.println(prolog());
 		return super.toXml(pw);
 	}
 	

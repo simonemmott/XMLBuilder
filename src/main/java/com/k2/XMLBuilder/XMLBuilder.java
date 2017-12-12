@@ -26,7 +26,7 @@ public class XMLBuilder {
 	private String indentStr = "\t";
 	private String currentIndentStr = "";
 	private boolean includeProlog = true;
-	private XMLDocument builderRoot;
+	protected XMLDocument builderRoot;
 	
 	public XMLBuilder() {}
 	

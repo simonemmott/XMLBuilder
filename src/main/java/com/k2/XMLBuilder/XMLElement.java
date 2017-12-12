@@ -29,7 +29,7 @@ public class XMLElement extends XMLNode {
 	 * @param xb The xml builder that created the xml element
 	 * @param tag The tag of the xml element
 	 */
-	XMLElement(XMLBuilder xb, String tag) {
+	protected XMLElement(XMLBuilder xb, String tag) {
 		super(xb);
 		this.tag = tag;
 	}
@@ -39,7 +39,7 @@ public class XMLElement extends XMLNode {
 	 * @param tag The tag of the xml element
 	 * @param namespace The namespace of the xml element
 	 */
-	XMLElement(XMLBuilder xb, String tag, XMLNamespace namespace) {
+	protected XMLElement(XMLBuilder xb, String tag, XMLNamespace namespace) {
 		super(xb);
 		this.tag = tag;
 		this.namespace = namespace;
@@ -55,6 +55,16 @@ public class XMLElement extends XMLNode {
 		if (attributes == null) attributes = new HashMap<String, String>();
 		attributes.put(attr, value);
 		return this;
+	}
+	
+	/**
+	 * Get the value of an attribute
+	 * @param attr	The name of the attribute to get
+	 * @return	The value of the attribute
+	 */
+	public String get(String attr) {
+		if (attributes == null) return null;
+		return attributes.get(attr);
 	}
 	/**
 	 * An alternative name for the set method to set an attribute of this element
