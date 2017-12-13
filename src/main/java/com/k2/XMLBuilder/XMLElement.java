@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.k2.XMLBuilder.XMLBuilder.NullAttributeHandling;
+
 /**
  * This class represents an xml element within an xml document
  * 
@@ -20,6 +22,8 @@ public class XMLElement extends XMLNode {
 	
 	private String tag;
 	private Map<String, String> attributes;
+	private NullAttributeHandling nullAttributeHandling = null;
+	private boolean emptyTag = false;
 	private XMLNamespace namespace;
 	private Set<XMLNamespace> namespaces;
 
@@ -43,6 +47,49 @@ public class XMLElement extends XMLNode {
 		super(xb);
 		this.tag = tag;
 		this.namespace = namespace;
+	}
+	
+	/**
+	 * This method returns the tag for this element
+	 * @return the tag for this element
+	 */
+	public String getTag() { return tag; }
+	
+	/**
+	 * This method returns the path to the element in the document
+	 * @return The path to the element
+	 */
+	public String getPath() {
+		if (parent!=null) return ((XMLElement)parent).getPath()+"/"+tag;
+		return "/"+tag;
+	}
+	/**
+	 * This method identifies that this element must be empty
+	 * @return this element
+	 */
+	protected XMLElement emptyTag() {
+		emptyTag = true;
+		return this;
+	}
+	/**
+	 * This method changes the tag of the element
+	 * @param tag the new value for the tag
+	 * @return this element
+	 */
+	protected XMLElement overrideTag(String tag) {
+		this.tag = tag;
+		return this;
+	}
+		
+	/**
+	 * This method defines how this element should handle null attributes. 
+	 * If it is not set then the value from the xml builder is used which default to use the string 'null'
+	 * @param nullAttributeHandling	the null attribute handling method
+	 * @return	This instance of the xml element for method chaining
+	 */
+	public XMLElement setNullAttributeHandling(NullAttributeHandling nullAttributeHandling) {
+		this.nullAttributeHandling = nullAttributeHandling;
+		return this;
 	}
 	
 	/**
@@ -104,6 +151,7 @@ public class XMLElement extends XMLNode {
 	 * @return The xml element that was added as a child for method chaining
 	 */
 	public XMLElement element(String tag) {
+		if (emptyTag) throw new XMLBuilderError("Unable to add element with tag: "+tag+" to this element with tag: "+this.tag+" that is defined to be empty");
 		XMLElement el = xb.element(tag);
 		super.add(el);
 		return el;
@@ -133,6 +181,7 @@ public class XMLElement extends XMLNode {
 	 * @return The xml element that was added as a child for method chaining
 	 */
 	public XMLElement element(String tag, XMLNamespace ns) {
+		if (emptyTag) throw new XMLBuilderError("Unable to add element with tag: "+tag+" to this element with tag: "+this.tag+" that is defined to be empty");
 		XMLElement el = xb.element(tag, ns);
 		super.add(el);
 		return el;
@@ -228,6 +277,7 @@ public class XMLElement extends XMLNode {
 	 */
 	@Override
 	public XMLElement add(XMLNode node) {		
+		if (emptyTag) throw new XMLBuilderError("Unable to add element with tag: "+tag+" to this element with tag: "+this.tag+" that is defined to be empty");
 		return (XMLElement)super.add(node);
 	}
 	/**
@@ -240,24 +290,6 @@ public class XMLElement extends XMLNode {
 	/**
 	 * Ensure that the method to set the namespace of this element returns this instance as an XMLElement
 	 */
-//	@Override
-//	public XMLElement set(XMLNamespace namespace) {		
-//		return (XMLElement)super.set(namespace);
-//	}
-	/**
-	 * Ensure that the method to add a namespace definition to this element returns this instance as an XMLElement
-	 */
-//	@Override
-//	public XMLElement add(XMLNamespace namespace) {		
-//		return (XMLElement)super.add(namespace);
-//	}
-	/**
-	 * Ensure that the method to remove a namespace definition from this element returns this instance as an XMLElement
-	 */
-//	@Override
-//	public XMLElement remove(XMLNamespace namespace) {
-//		return (XMLElement)super.remove(namespace);
-//	}
 	
 	/**
 	 * Output this element as well formed xml including and defining namespaces as necessary
@@ -291,10 +323,42 @@ public class XMLElement extends XMLNode {
 		}
 		
 		// Add any attributes that have been defined for the element xml encoding the attribute values
-		if (attributes != null) for (String attr : attributes.keySet()) pw.print(" "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"");
+		if (attributes != null) {
+			for (String attr : attributes.keySet()) {
+				NullAttributeHandling nullHandling = this.nullAttributeHandling;
+				if (nullHandling == null) nullHandling = xb.getNullAttributeHandling();
+				switch (nullHandling) {
+				case BLANK:
+					if (attributes.get(attr) == null) {
+						pw.print(" "+attr);
+					} else {
+						pw.print(" "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"");
+					}
+					break;
+				case SKIP:
+					if (attributes.get(attr) != null) {
+						pw.print(" "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"");
+					}
+					break;
+				case USE_NULL:
+					pw.print(" "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"");
+					break;
+				default:
+					pw.print(" "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"");
+					break;
+				
+				}
+			}
+		}
 		
 		// If this element has no contents close the element
-		if (contents==null||contents.size()==0) pw.println("/>");
+		if (contents==null||contents.size()==0) {
+			if (xb.optionalEndTagsAllowed() && emptyTag) {
+				pw.println(">");
+			} else {
+				pw.println("/>");
+			}
+		}
 		// Otherwise write the child contents of this element
 		else {
 			// If there is only one child element and that elemnt is a data element

@@ -22,11 +22,19 @@ import java.util.Set;
  */
 public class XMLBuilder {
 	
+	public enum NullAttributeHandling {
+		SKIP,
+		BLANK,
+		USE_NULL;
+	}
+	
 	private int indent = 0;
 	private String indentStr = "\t";
 	private String currentIndentStr = "";
 	private boolean includeProlog = true;
 	protected XMLDocument builderRoot;
+	private NullAttributeHandling nullAttributeHandling = NullAttributeHandling.USE_NULL;
+	private boolean allowOptionalEndTags = false;
 	
 	public XMLBuilder() {}
 	
@@ -60,6 +68,34 @@ public class XMLBuilder {
 	String getIndentStr() {
 		return currentIndentStr;
 	}
+	
+	/**
+	 * This method identifies the xml builder as allowing option end tags
+	 * This is not allowed for pure xml but is allowed for html
+	 * @return	This xml builder
+	 */
+	protected XMLBuilder allowOptionalEndTags() {
+		allowOptionalEndTags = true;
+		return this;
+	}
+	
+	/**
+	 * This method identifies whether this builder allows optional end tags
+	 * @return	true if this xml builder allows optional end tags
+	 */
+	boolean optionalEndTagsAllowed() { return allowOptionalEndTags; }
+	
+	/**
+	 * This method controls how documents with null attributes are output in the resultant xml
+	 * @param nullAttributeHandling	The null attribute handling method
+	 * @return	The current xml bulder for method chaining
+	 */
+	public XMLBuilder setNullAttributeHandling(NullAttributeHandling nullAttributeHandling) {
+		this.nullAttributeHandling = nullAttributeHandling;
+		return this;
+	}
+	
+	NullAttributeHandling getNullAttributeHandling() { return this.nullAttributeHandling; }
 	
 	/**
 	 * The method tells the builder whether to include the XML prolog in the output

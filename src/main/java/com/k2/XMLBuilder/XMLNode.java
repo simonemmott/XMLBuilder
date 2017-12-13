@@ -36,6 +36,7 @@ public abstract class XMLNode {
 		this.parent = parent;
 		return this;
 	}
+	
 	/**
 	 * Get the parent node of this node
 	 * @return The parent node of this node
