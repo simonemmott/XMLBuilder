@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.k2.CssSelectorParser.CssElementFilter;
+import com.k2.CssSelectorParser.CssElementFilterRule;
+import com.k2.CssSelectorParser.CssSelectorParser;
 import com.k2.XMLBuilder.XMLBuilder.NullAttributeHandling;
 
 /**
@@ -47,6 +50,191 @@ public class XMLElement extends XMLNode {
 		super(xb);
 		this.tag = tag;
 		this.namespace = namespace;
+	}
+	
+	/**
+	 * Check whether this element matches the given CSS selector
+	 * @param cssSelector The CSS selector to compare to this element
+	 * @return	True if the element matches the CSS selector
+	 */
+	public boolean matches(String cssSelector) {
+		return matches(CssSelectorParser.parse(cssSelector));
+	}
+	
+	/**
+	 * Test whether this element passes the given CSS selector rule
+	 * @param rule The CSS selector rule to compare to this element
+	 * @return True if the element passes the CSS selector rule
+	 */
+	private boolean matches(CssElementFilterRule rule) {
+		
+		String value;
+		
+		switch(rule.type) {
+		case ANY_TAG:
+			return true;
+		case ATTRIBUTE_CONTAINS_STRING:
+			if (attributes == null) return false;
+			value = attributes.get(rule.attribute);
+			if (value == null || "".equals(value)) return false;
+			return value.contains(rule.check);
+		case ATTRIBUTE_CONTAINS_WORD:
+			if (attributes == null) return false;
+			value = attributes.get(rule.attribute);
+			if (value == null || "".equals(value)) return false;
+			for (String word : value.split("\\s+")) if (word.equals(rule.check)) return true;
+			return false;
+		case ATTRIBUTE_ENDS_WITH:
+			if (attributes == null) return false;
+			value = attributes.get(rule.attribute);
+			if (value == null || "".equals(value)) return false;
+			return value.endsWith(rule.check);
+		case ATTRIBUTE_STARTS_WITH:
+			if (attributes == null) return false;
+			value = attributes.get(rule.attribute);
+			if (value == null || "".equals(value)) return false;
+			return value.startsWith(rule.check);
+		case ATTRIBUTE_STARTS_WITH_TILL_HYPHEN:
+			if (attributes == null) return false;
+			value = attributes.get(rule.attribute);
+			if (value == null || "".equals(value)) return false;
+			int indexOf = value.indexOf("-");
+			if (indexOf == -1) return value.equals(rule.check);
+			return value.substring(0, indexOf).equals(rule.check);
+		case ATTRUBUTE_EQUALS:
+			if (attributes == null) return false;
+			value = attributes.get(rule.attribute);
+			if (value == null || "".equals(value)) return false;
+			return value.equals(rule.check);
+		case HAS_ATTRIBUTE:
+			if (attributes == null) return false;
+			return attributes.containsKey(rule.attribute);
+		case HAS_CLASS:
+			if (attributes == null) return false;
+			value = attributes.get("class");
+			if (value == null || "".equals(value)) return false;
+			for (String word : value.split("\\s+")) if (word.equals(rule.check)) return true;
+			return false;
+		case ID_EQUALS:
+			if (attributes == null) return false;
+			value = attributes.get("id");
+			if (value == null || "".equals(value)) return false;
+			return value.equals(rule.check);
+		case TAG_EQUALS:
+			return tag.equals(rule.check);
+		default:
+			break;
+		
+		}
+		return false;
+	}
+	
+	/**
+	 * Check whether the element matches the given parsed CSS selector element filter
+	 * @param filter The CSS element filter to compare to this element
+	 * @return	True if this element matches the filter element
+	 */
+	boolean matches(CssElementFilter filter) {
+		if (filter.elementFilterRules != null) {
+			for (CssElementFilterRule rule : filter.elementFilterRules) {
+				if (!matches(rule)) return false;
+			}
+		}
+		
+		if (filter.previousFilter == null) {
+			return true;
+		} else {
+			switch(filter.rule) {
+			case IS_ANCESTOR:
+				if (parent == null) return false;
+				XMLElement ancestor = ((XMLElement)parent);
+				while (ancestor != null) {
+					if (ancestor.matches(filter.previousFilter)) return true;
+					if (ancestor.parent == null) return false;
+					ancestor = ((XMLElement)ancestor.parent);
+				}
+				return false;
+			case IS_PARENT:
+				if (parent == null) return false;
+				return ((XMLElement)parent).matches(filter.previousFilter);
+			case NEXT_SIBLING:
+				if (parent == null) return false;
+				int i = parent.contents.indexOf(this);
+				while (++i < parent.contents.size()) {
+					if (((XMLElement)parent.contents.get(i)).matches(filter.previousFilter)) return true;
+				}
+				return false;
+			case PREVIOUS_SIBLING:
+				if (parent == null) return false;
+				int j = parent.contents.indexOf(this);
+				if (j == 0) return false;
+				return ((XMLElement)parent.contents.get(j -1)).matches(filter.previousFilter);
+			default:
+				return true;
+			}
+		}
+	}
+	
+	/**
+	 * Check whether this element matches at least one of the element filters in the list
+	 * @param filters	A list of CSS elemnt filters
+	 * @return	True if this element matches at least one of the element filters in the list
+	 */
+	private boolean matches(List<CssElementFilter> filters) {
+		if (filters == null) return false;
+		for (CssElementFilter filter : filters) if (matches(filter)) return true;
+		return false;
+	}
+	
+	/**
+	 * Find all the ancestor element that match the given filters building up the results
+	 * @param filters The filters to compare to this elements ancestors
+	 * @param results The results identified do far in this recursion
+	 * @return The results identified so far + the results for this check
+	 */
+	List<XMLElement> findUp(List<CssElementFilter> filters, List<XMLElement> results) {
+		if (matches(filters)) results.add(this);
+		if (parent == null) {
+			return results; 
+		} else {
+			return ((XMLElement)parent).findUp(filters, results);
+		}
+	}
+	
+	/**
+	 * Find the nearest ancestor that matches the given CSS selector
+	 * 
+	 * Note this will not check this element
+	 * 
+	 * @param cssSelector	The CSS selector to compare to this elements ancestors
+	 * @return	The nearest ancestor that matches the given CSS selector
+	 */
+	public XMLElement nearest(String cssSelector) {
+		if (parent == null) return null;
+		XMLElement nearest = (XMLElement)parent;
+		while (nearest != null) {
+			if (nearest.matches(cssSelector)) return nearest;
+		}
+		return null;
+	}
+	
+	/**
+	 * Find all the elements that match the given CSS selector from this elements ancestors.
+	 * 
+	 * Note this will not check or include this element
+	 * 
+	 * @param cssSelector The CSS selector to compare to this elements ancestors
+	 * @return	A list of elements from this elements ancestors that match the given CSS selector
+	 */
+	public List<XMLElement> findUp(String cssSelector) {
+		
+		List<XMLElement> results = new ArrayList<XMLElement>();
+		
+		if (parent == null) {
+			return results; 
+		} else {
+			return ((XMLElement)parent).findUp(CssSelectorParser.parse(cssSelector), results);
+		}
 	}
 	
 	/**

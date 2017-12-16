@@ -16,6 +16,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.k2</groupId>
+      <artifactId>CssSelectorParser</artifactId>
+      <version>0.1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -23,3 +28,5 @@
     </dependency>
   </dependencies>
 </project>
+
+

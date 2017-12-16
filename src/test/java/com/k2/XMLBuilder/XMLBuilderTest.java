@@ -2,6 +2,7 @@ package com.k2.XMLBuilder;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -246,6 +247,155 @@ public class XMLBuilderTest
         assertEquals( expectedResult, sw.toString());
     }
 
+	@Test
+    public void matchesTest()
+    {
+    	        		
+		XMLBuilder xb = new XMLBuilder();
+		XMLDocument doc = xb.document("root");
+		XMLElement ddd = doc.elem("aaa")
+			.attr("id", "1")
+			.attr("attr1", "value1")
+			.attr("attr2", "value2")
+			.attr("attr3", "value3")
+			.attr("attr4", "value4")
+			.elem("bbb")
+				.attr("id", "2")
+				.attr("attr1", "value1")
+				.attr("attr2", "value2")
+				.attr("attr3", "value3")
+				.elem("ccc")
+					.attr("id", "3")
+					.attr("attr1", "value1")
+					.attr("attr2", "value2")
+					.attr("attr3", "value3")
+					.elem("ddb")
+						.attr("id", "4")
+						.attr("attr1", "value1")
+						.up()
+					.elem("ddc")
+						.attr("id", "5")
+						.attr("attr1", "vvvv")
+						.up()
+					.elem("ddd")
+						.attr("id", "6")
+						.attr("attr1", "value1")
+						.attr("attr2", "value2")
+						.attr("attr3", "value3");
+		ddd.up()
+		.elem("dde")
+			.attr("id", "7")
+			.attr("attr1", "value1")
+			.attr("attr2", "value2")
+			.up()
+		.elem("ddf")
+			.attr("id", "8")
+			.attr("attr1", "vvvv");
+		
+		assertEquals(true, ddd.matches("ddd"));
+		assertEquals(true, ddd.matches("ddd[attr1]"));
+		assertEquals(false, ddd.matches("ddd[attr1=xxx]"));
+		assertEquals(true, ddd.matches("ccc > *"));
+		assertEquals(false, ddd.matches("bbb > *"));
+		assertEquals(true, ddd.matches("bbb *"));
+		assertEquals(false, ddd.matches("zzz *"));
+		assertEquals(true, ddd.matches("[attr4$=e4] *"));
+		assertEquals(false, ddd.matches("[attr4$=e4] > *"));
+		assertEquals(false, ddd.matches("[attr4$=e4] zzz"));
+		assertEquals(true, ddd.matches("root > aaa > bbb > ccc > ddd"));
+		assertEquals(true, ddd.matches("root > aaa > bbb[attr1] > ccc > ddd"));
+		assertEquals(false, ddd.matches("root > aaa > bbb[zzz] > ccc > ddd"));
+		assertEquals(true, ddd.matches("zzz ddd, yyy ddd, bbb ddd"));
+		assertEquals(true, ddd.matches("ddc + ddd"));
+		assertEquals(false, ddd.matches("ddb + ddd"));
+		assertEquals(false, ddd.matches("ddc[attr2] + ddd"));
+		assertEquals(true, ddd.matches("ddc[attr1] + ddd"));
+		assertEquals(true, ddd.matches("ddc[attr1=vvvv] + ddd"));
+		assertEquals(true, ddd.matches("dde ~ ddd"));
+		assertEquals(true, ddd.matches("ddf ~ ddd"));
+		assertEquals(true, ddd.matches("[attr1=vvvv] ~ ddd"));
+		assertEquals(true, ddd.matches("#2 ddd"));
+		assertEquals(false, ddd.matches("#7 ddd"));
+
+    }
+	
+	@Test
+    public void nearestTest()
+    {
+    	        		
+		XMLBuilder xb = new XMLBuilder();
+		XMLDocument doc = xb.document("root");
+		XMLElement ddd = doc.elem("aaa")
+			.attr("id", "1")
+			.attr("attr1", "value1")
+			.attr("attr2", "value2")
+			.attr("attr3", "value3")
+			.attr("attr4", "value4")
+			.elem("bbb")
+				.attr("id", "2")
+				.attr("attr1", "value1")
+				.attr("attr2", "value2")
+				.attr("attr3", "value3")
+				.elem("ccc")
+					.attr("id", "3")
+					.attr("attr1", "value1")
+					.attr("attr2", "value2")
+					.attr("attr3", "value3")
+					.elem("ddd")
+						.attr("id", "6")
+						.attr("attr1", "value1")
+						.attr("attr2", "value2")
+						.attr("attr3", "value3");
+		
+		assertEquals("2", ddd.nearest("bbb").get("id"));
+		assertEquals("1", ddd.nearest("[attr4]").get("id"));
+		assertEquals("2", ddd.nearest("[attr4], bbb").get("id"));
+		assertEquals("2", ddd.nearest("bbb, [attr4]").get("id"));
+
+    }
+	
+	@Test
+    public void findUpTest()
+    {
+    	        		
+		XMLBuilder xb = new XMLBuilder();
+		XMLDocument doc = xb.document("root");
+		XMLElement ddd = doc.elem("aaa")
+			.attr("id", "1")
+			.attr("attr1", "value1")
+			.attr("attr2", "value2")
+			.attr("attr3", "value3")
+			.attr("attr4", "value4")
+			.elem("bbb")
+				.attr("id", "2")
+				.attr("attr1", "value1")
+				.attr("attr2", "value2")
+				.attr("attr3", "value3")
+				.elem("ccc")
+					.attr("id", "3")
+					.attr("attr1", "value1")
+					.attr("attr2", "value2")
+					.attr("attr4", "value3")
+					.elem("ddd")
+						.attr("id", "6")
+						.attr("attr1", "value1")
+						.attr("attr2", "value2")
+						.attr("attr3", "value3");
+		
+		List<XMLElement> found = ddd.findUp("[attr4]");
+		
+		assertEquals(2, found.size());
+		assertEquals("3", found.get(0).get("id"));
+		assertEquals("1", found.get(1).get("id"));
+		
+		found = ddd.findUp("aaa, ccc");
+
+		assertEquals(2, found.size());
+		assertEquals("3", found.get(0).get("id"));
+		assertEquals("1", found.get(1).get("id"));
+
+    }
+	
 
 
 }
