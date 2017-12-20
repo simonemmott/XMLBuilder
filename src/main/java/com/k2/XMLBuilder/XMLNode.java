@@ -18,7 +18,7 @@ public abstract class XMLNode {
 	
 	protected XMLBuilder xb;
 	protected XMLNode parent;
-	List<XMLNode> contents;
+	protected List<XMLNode> contents;
 
 	/**
 	 * Create an xml node for the given xml builder
@@ -27,23 +27,16 @@ public abstract class XMLNode {
 	XMLNode(XMLBuilder xb) {
 		this.xb = xb;
 	}
-	/**
-	 * Set the parent of this node
-	 * @param parent The xml node that is a parent of this node
-	 * @return This node for method chaining
-	 */
-	XMLNode setParent(XMLNode parent) {
-		this.parent = parent;
-		return this;
-	}
 	
 	/**
-	 * Get the parent node of this node
-	 * @return The parent node of this node
+	 * This method returns the index of this node in its parents contents
+	 * @return The index of this node in it parents contents or null if it doesn't have a parent
 	 */
-	XMLNode getParent() {
-		return parent;
+	protected Integer indexOf() {
+		if (parent == null) return null;
+		return parent.contents.indexOf(this);
 	}
+
 	/**
 	 * A utility method to move up the document path once the node has been fully defined.
 	 * @return The parent node of this node as an XMLElement
@@ -64,7 +57,7 @@ public abstract class XMLNode {
 	public XMLNode add(XMLNode node) {
 		if (contents == null) { contents = new ArrayList<XMLNode>(); }
 		contents.add(node);
-		node.setParent(this);
+		node.parent = this;
 		return this;
 	}
 	/**

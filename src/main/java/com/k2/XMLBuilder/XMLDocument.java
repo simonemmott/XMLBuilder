@@ -71,11 +71,6 @@ public class XMLDocument extends XMLElement {
 		return this;
 	}
 	
-	/**
-	 * Xml documents cannot have a parent
-	 */
-	@Override
-	XMLDocument setParent(XMLNode parent) { return this; }
 
 	/**
 	 * Ensure that the method to add a child node returns this instance as an XMLDocument

@@ -53,6 +53,43 @@ public class XMLElement extends XMLNode {
 	}
 	
 	/**
+	 * This method casts this nodes parent as an XMLElement
+	 * @return	This nodes parent cast as XMLElement
+	 */
+	public XMLElement parent() { return (XMLElement)parent; }
+	
+	/**
+	 * A utility method to check whether the element defines the given attribute
+	 * @param attribute	The attribute to check
+	 * @return	True if this element has defined the attribute
+	 */
+	public boolean has(String attribute) {
+		return attributes.containsKey(attribute);
+	}
+	
+	/**
+	 * A utilty method to get the previous sibling of this element
+	 * @return	The previous sibling or null if there is no parent or this element is the first child
+	 */
+	public XMLElement getPreviousSibling() {
+		if (parent == null) return null;
+		int indexOf = parent.contents.indexOf(this);
+		if (indexOf == 0) return null;
+		return (XMLElement)parent.contents.get(indexOf - 1);
+	}
+	
+	/**
+	 * A utility method to get the next sibling of this element
+	 * @return	The next sibling or null if there is not parent or this is the last child
+	 */
+	public XMLElement getNextSibling() {
+		if (parent == null) return null;
+		int indexOf = parent.contents.indexOf(this);
+		if (indexOf == parent.contents.size()-1) return null;
+		return (XMLElement)parent.contents.get(indexOf + 1);
+	}
+	
+	/**
 	 * Check whether this element matches the given CSS selector
 	 * @param cssSelector The CSS selector to compare to this element
 	 * @return	True if the element matches the CSS selector
@@ -161,14 +198,18 @@ public class XMLElement extends XMLNode {
 				if (parent == null) return false;
 				int i = parent.contents.indexOf(this);
 				while (++i < parent.contents.size()) {
-					if (((XMLElement)parent.contents.get(i)).matches(filter.previousFilter)) return true;
+					if (XMLElement.class.isAssignableFrom(parent.contents.get(i).getClass())) {
+						if (((XMLElement)parent.contents.get(i)).matches(filter.previousFilter)) return true;
+					}
 				}
 				return false;
 			case PREVIOUS_SIBLING:
 				if (parent == null) return false;
 				int j = parent.contents.indexOf(this);
 				if (j == 0) return false;
-				return ((XMLElement)parent.contents.get(j -1)).matches(filter.previousFilter);
+				if (XMLElement.class.isAssignableFrom(parent.contents.get(j -1).getClass())) {
+					return ((XMLElement)parent.contents.get(j -1)).matches(filter.previousFilter);
+				} return false;
 			default:
 				return true;
 			}
@@ -214,6 +255,7 @@ public class XMLElement extends XMLNode {
 		XMLElement nearest = (XMLElement)parent;
 		while (nearest != null) {
 			if (nearest.matches(cssSelector)) return nearest;
+			nearest = nearest.parent();
 		}
 		return null;
 	}
