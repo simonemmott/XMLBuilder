@@ -177,7 +177,7 @@ public class XMLBuilder {
 	
 	/**
 	 * This method returns the xml builders current root document.
-	 * <stong>NOTE</strong> You should create a new xml builder each time you create a new document
+	 * <strong>NOTE</strong> You should create a new xml builder each time you create a new document
 	 * @return	The XMLDocument that it the current document
 	 */
 	public XMLDocument root() { return builderRoot; }

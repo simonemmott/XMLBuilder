@@ -91,7 +91,7 @@ public abstract class XMLNode {
 	 * This method is a convenience method to simplify the generation of xml files.
 	 * @param f	The file to write the xml to
 	 * @return The file that was passed in
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException If the given file does not exist
 	 */
 	public File toXml(File f) throws FileNotFoundException {
 		toXml(new PrintWriter(f)).flush();

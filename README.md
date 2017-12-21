@@ -1,11 +1,11 @@
 # XMLBuilder
 XMLBuilder is a light weight utility for building well formed xml documents with with minimum of java code.
 It supports namespaces for the distinction of similarly named elements and the API is designd to mimic the
-sructure of the reulstant xml document.
+structure of the resultant xml document.
 
 ### License
 
-[Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+[GNU GENERAL PUBLIC LICENSE v3](http://fsf.org/)
 
 ## Basic Example
 

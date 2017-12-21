@@ -110,7 +110,7 @@ public class XMLDocument extends XMLElement {
 	
 	/**
 	 * The method returns the prolog as a string. It is used to add the prolog to the document and should be overriden if an
-	 * Alternative prolog is required e.g. \<!DOCTYPE html\> for an html document
+	 * Alternative prolog is required e.g. &lt;!DOCTYPE html&gt; for an html document
 	 * @return	The prolog string
 	 */
 	protected String prolog() { return "<?xml version=\""+version+"\" encoding=\""+encoding+"\"?>"; }

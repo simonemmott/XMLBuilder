@@ -4,7 +4,7 @@
 
   <groupId>com.k2</groupId>
   <artifactId>XMLBuilder</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <packaging>jar</packaging>
 
   <name>XMLBuilder</name>
@@ -18,7 +18,7 @@
     <dependency>
       <groupId>com.k2</groupId>
       <artifactId>CssSelectorParser</artifactId>
-      <version>0.1.1-SNAPSHOT</version>
+      <version>0.1.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
