@@ -682,7 +682,35 @@ public class XMLElement extends XMLNode {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<"+tag);
-		if (attributes != null) for (String attr : attributes.keySet()) sb.append(" "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"");
+		if (attributes != null) for (String attr : attributes.keySet()) { 
+			NullAttributeHandling nullHandling = this.nullAttributeHandling;
+			if (nullHandling == null) nullHandling = xb.getNullAttributeHandling();
+			String attrStr = "";
+			switch (nullHandling) {
+			case BLANK:
+				if (attributes.get(attr) == null) {
+					attrStr = " "+attr;
+				} else {
+					attrStr = " "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"";
+				}
+				break;
+			case SKIP:
+				if (attributes.get(attr) != null) {
+					attrStr = " "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"";
+				}
+				break;
+			case USE_NULL:
+				attrStr = " "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"";
+				break;
+			default:
+				attrStr = " "+attr+"=\""+XMLBuilder.encodeXmlAttribute(attributes.get(attr))+"\"";
+				break;
+			
+			}
+
+			
+			sb.append(attrStr);
+		}
 		if (contents==null||contents.size()==0) sb.append("/>");
 		else {
 			sb.append(">");
