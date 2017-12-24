@@ -46,7 +46,7 @@ Maven users can add this project using the following additions to the pom.xml fi
     <dependency>
         <groupId>com.k2</groupId>
         <artifactId>XMLBuilder</artifactId>
-        <version>1.0.0-FINAL</version>
+        <version>1.0.3</version>
     </dependency>
     ...
 </dependencies>
